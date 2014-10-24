@@ -2,7 +2,7 @@
 <div class="guest form">
 <?php echo $this->Form->create('Guest'); ?>
 <legend><?php echo __('Add Guest'); ?></legend>
-
+<div class="input email"><label for="0GuestEmail">Email</label><input name="data[0][Guest][email]" maxlength="50" type="email" value="holly@test.com" id="0GuestEmail"/></div>
 <?php
 $num = 0;
 while ($num < $numberInParty ){
@@ -21,7 +21,8 @@ while ($num < $numberInParty ){
     }*/
 $num++;
 }
+?>
 
-
+<?php
 echo $this->Form->end(__('Submit')); ?>
 </div>

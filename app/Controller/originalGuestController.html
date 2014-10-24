@@ -37,9 +37,9 @@ class GuestsController extends AppController {
 			));*/
 
 		//how many guests
-		//$guests = $this->Guest->find('all');
+		$guests = $this->Guest->find('all');
 		$this->set(array(
-				'guests' => $this->Paginator->paginate(),
+				'guests' => $guests,
 				'_serialize' => array('guests')
 
 			));
@@ -133,10 +133,8 @@ class GuestsController extends AppController {
 	}
 	
 	public function edit($family_id = null, $user_id = null) {
-		
 		if ($this->request->is('post') || $this->request->is('put')) {
-			pr($this->request->data);
-			if ($this->Guest->saveMany($this->request->data)) {
+			if ($this->Guest->save($this->request->data)) {
 				$this->Session->setFlash(__('The guest has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -147,9 +145,9 @@ class GuestsController extends AppController {
 		
 		// find and set guest list
 		$guest_group = $this->Guest->find('all', array( 'conditions' => array('Guest.user_id' => $user_id, 'Guest.family_group' => $family_id) ) );
-		$this->set('num', count($guest_group));
-		$this->request->data = $guest_group;
+		$this->set('guests', $guest_group);
 	}
+
 
 	public function delete($id = null) {
 		$this->Guest->id = $id;

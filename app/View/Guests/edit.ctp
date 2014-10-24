@@ -1,25 +1,31 @@
-<div class="guests form">
+<!-- app/View/Users/edit.ctp -->
+<div class="guest form">
 <?php echo $this->Form->create('Guest'); ?>
-	<fieldset>
-		<legend><?php echo __('Edit Guest Party'); ?></legend>
-	<?php
-		foreach ($guests as $guest){	
-		echo $this->Form->input('issue_id');
-		echo $this->Form->input('issue_publication_id');
-		echo $this->Form->input('issue_number');
-		echo $this->Form->input('issue_date_publication');
-		echo $this->Form->input('issue_cover', array('type' => 'file'));
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
+<legend><?php echo __('Edit Guest'); ?></legend>
 
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Issue.issue_id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Issue.issue_id'))); ?></li>
-		<li><?php echo $this->Html->link(__('List Issues'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Publications'), array('controller' => 'publications', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Publication'), array('controller' => 'publications', 'action' => 'add')); ?> </li>
-	</ul>
+<?php
+//Debugger::dump($guests);
+$i = 0;
+while ($i <= $num ){
+	echo $this->Form->input($i .'.Guest.email');
+	echo $this->Form->input($i .'.Guest.first_name', array('label' => 'Your name here'));
+    echo $this->Form->input($i . '.Guest.last_name');
+    echo $this->Form->input($i . '.Guest.id', array('type' => 'hidden'));
+   	echo '<div class="input radio">';
+    echo $this->Form->radio($i .'.Guest.allow_plus1', array( 1 => 'Yes', 0 => 'No'), array('legend' => 'Allow guest a plus one?'));
+   	echo '</div>';
+
+   /* if(isset($question1)){
+    	echo '<div class="input select">';
+    	echo $this->Form->label('Guest.' . $num . '.question1', 'Choose your meal option');
+    	echo $this->Form->select('Guest.' . $num . '.question2', $question1, array('empty' => 'Please choose one?', ));
+    	echo '</div>';
+    }*/
+
+    $i++;
+}
+
+
+echo $this->Form->end(__('Submit')); ?>
+$this->Html->link(__('Edit'), array('action' => 'edit', $guest['Guest']['family_group'],$guest['Guest']['user_id'] ));
 </div>

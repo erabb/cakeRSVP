@@ -1,3 +1,4 @@
+
 <div class="guest index">
 <h2>Hi <?php 
 	echo ($guests[0]['User']['first_name']) ?>,</h2>
