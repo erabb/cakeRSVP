@@ -3,6 +3,8 @@
 App::uses('AppModel', 'Model');
 
 class Guest extends AppModel {
+  public $actsAs = array('Containable');
+  
 	public $validate = array(
 		'email' => array(
 			'email_format' => array(

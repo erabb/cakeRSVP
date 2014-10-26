@@ -17,14 +17,20 @@ class GuestsController extends AppController {
 	public $components = array('Paginator', 'Session', 'RequestHandler');
 
 	public function index() {
+
 		//$this->Guest->recursive = 1;
 		if(!$this->Auth->loggedIn()){
 			$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 			}
 		$user = $this->Auth->user();
 		$user_id = $user['id'];
+
 		$this->Paginator->settings = array(
 			'conditions' => array('Guest.user_id' => $user_id),
+			'order' => array(
+					'Guest.family_group' => 'asc'
+				)
+			
 		);
 		
 		$this->set('guests', $this->Paginator->paginate());
@@ -49,12 +55,26 @@ class GuestsController extends AppController {
 		$this->set('yesTotal', $yesTotal);
 	}
 
-	public function view($id = null) {
-		if (!$this->Guest->exists($id)) {
-			throw new NotFoundException(__('Invalid guest'));
-		}
-		$options = array('conditions' => array('Guest.' . $this->Guest->primaryKey => $id));
-		$this->set('guest', $this->Guest->find('first', $options));
+	public function rsvp($user_id) {
+
+		$this->Guest->contain();
+		
+		$this->Paginator->settings = array(
+			'conditions' => array('Guest.user_id' => $user_id),
+			'order' => array(
+					'Guest.family_group' => 'asc'
+				)
+			
+		);
+		
+		//$this->set('guests', $this->Paginator->paginate());
+
+		$this->set(array(
+				'guests' => $this->Paginator->paginate(),
+				'_serialize' => array('guests')
+
+			));
+		
 	}
 
 	public function add($numberInParty = null) {
@@ -116,6 +136,29 @@ class GuestsController extends AppController {
 			}
 		}
 	}
+
+	public function addToParty($family_group = null, $user_id = null){
+		
+
+		if ($this->request->is('post')) {
+			
+			$this->Guest->create();
+			$data = $this->request->data;
+
+			$data['Guest'][0]['family_group'] = $family_group;
+			$data['Guest'][0]['user_id'] = $user_id;
+			
+			
+			if ($this->Guest->saveAll($data['Guest'])) {
+				$this->Session->setFlash(__('The guest has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The guest could not be saved. Please, try again.'));
+			}
+		}
+
+
+	}
 	
 	public function getLastGuest(){
 		$lastGuest = $this->Guest->find('first', array('order' => array('Guest.id' => 'desc')));
@@ -147,6 +190,14 @@ class GuestsController extends AppController {
 		
 		// find and set guest list
 		$guest_group = $this->Guest->find('all', array( 'conditions' => array('Guest.user_id' => $user_id, 'Guest.family_group' => $family_id) ) );
+		
+		$this->set(array(
+				'guests' => $guest_group,
+				'_serialize' => array('guests')
+
+			));
+
+
 		$this->set('num', count($guest_group));
 		$this->request->data = $guest_group;
 	}

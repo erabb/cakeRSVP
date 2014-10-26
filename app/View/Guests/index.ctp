@@ -2,7 +2,6 @@
 <div class="guest index">
 <h2>Hi <?php 
 	echo ($guests[0]['User']['first_name']) ?>,</h2>
-
 <h3>Dashboard Totals</h2>
 
 <table>
@@ -69,14 +68,17 @@
 			$actions[] = $this->Html->link(__('Edit'), array('action' => 'edit', $guest['Guest']['family_group'],$guest['Guest']['user_id'] ));
 			$actions[] = $this->Form->postLink(__('Delete'), array('action' => 'delete', $guest['Guest']['id']), null, __('Are you sure you want to delete # %s?', $guest['Guest']['id']));
 			
-			$row[] = array(
-				implode(' ', $actions),
-				array('class' => 'actions'),
-				);
+			
+
+			
 			
 			
 			// check to see if this is a new family group
 			if($guest['Guest']['family_group'] == $familyClass){
+				$row[] = array(
+				implode(' ', $actions),
+				array('class' => 'actions'),
+				);
 				//if family_group the same give the same background
 				if($green){
 					echo $this->Html->tableCells($row, array('class' => 'greenBckgd'), false, false, true);
@@ -84,6 +86,11 @@
 					echo $this->Html->tableCells($row);
 					}
 			}else{ //if a new family group give a new background
+				$actions[] = $this->Html->link(__('Add to party'), array('action' => 'addToParty', $guest['Guest']['family_group'],$guest['Guest']['user_id'] ));
+				$row[] = array(
+				implode(' ', $actions),
+				array('class' => 'actions'),
+				);
 				if($green){
 					$green = false;
 					echo $this->Html->tableCells($row);
@@ -96,15 +103,10 @@
 			//set the family class so that it can be checked against in the next loop	
 			$familyClass = $guest['Guest']['family_group'];
 			
-			//	$rows[] = $row;
+
 				
 		}
-		
-		/*if(!empty($rows)) {
-				echo $this->Html->tableCells($rows);
-			}	
-			*/
-		
+
 		?>
 
 	
